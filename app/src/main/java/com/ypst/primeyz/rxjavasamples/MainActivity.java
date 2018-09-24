@@ -7,13 +7,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ypst.primeyz.rxjavasamples.data.vo.CountryVO;
+
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +33,37 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this, this);
+    }
+
+    @OnClick(R.id.btn_in_code_two)
+    public void onTapBtnInCodeTwo(View view) {
+        tvText.setText("");
+
+        RxJavaApp rxJavaApp = (RxJavaApp) getApplication();
+
+        Observable<ArrayList<CountryVO>> countryListObservable = rxJavaApp.getCountryAPI().getAllCountries();
+        countryListObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new DisposableObserver<ArrayList<CountryVO>>() {
+                    @Override
+                    public void onNext(ArrayList<CountryVO> countryVOS) {
+
+                        for (CountryVO vo : countryVOS) {
+
+                            tvText.setText(String.format("%sRx Api : \"%s\" \n", tvText.getText(), vo.getName()));
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        tvText.setText(String.format("onError : %s", e.getMessage()));
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @OnClick(R.id.btn_in_code_one)
@@ -60,4 +98,5 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }

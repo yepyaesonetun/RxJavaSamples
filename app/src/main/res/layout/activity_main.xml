@@ -22,9 +22,16 @@
             android:id="@+id/btn_in_code_one"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="In Code One"
             android:layout_alignParentBottom="true"
-            />
+            android:text="In Code One" />
+
+        <Button
+            android:id="@+id/btn_in_code_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/btn_in_code_one"
+            android:text="In Code Two" />
+
 
     </RelativeLayout>
 
